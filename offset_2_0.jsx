@@ -11,9 +11,10 @@ if (typeof(secondRunVar[1])=="undefined"){  //verifica se é primeira rodada
     firstRun(docRef);
 }
 else {
+  ajustaEscala();
      runOffset(docRef,secondRunVar[0],secondRunVar[1],secondRunVar[2]);
 }
-ajustaEscala();
+
 
 function firstRun(docRef)
 {
@@ -33,11 +34,11 @@ function firstRun(docRef)
     var offsetValue = prompt("Qual offset? (em mm)",0.15);  // pede as variaveis
     if (offsetValue==null){return;}
 
-    var idealResolution = prompt("Qual resolução de visualização? (ideal Performance: 300 - Qualidade: 800 dpi)",600);                              // Para resultados mais rapidos é melhor trabalhar com menos resolução (600-800 dpi recomendavel)
+    var idealResolution = prompt("Qual resolução de visualização? (ideal Performance: 300 - Qualidade: 800 dpi)",300);                              // Para resultados mais rapidos é melhor trabalhar com menos resolução (600-800 dpi recomendavel)
     if (idealResolution==null){return;}
 
     var firstRunVar = offsetValue;
-    var rerunValue = prompt("Rodar quantas vezes?",4);
+    var rerunValue = prompt("Rodar quantas vezes?",7);
     if (rerunValue==null){return;}
 
     var timeValue = prompt("Com quanto de intervalo? (em segundos)",0);
@@ -61,9 +62,10 @@ function firstRun(docRef)
 }
 
 function runOffset(docRef,offsetValue,rerunValue,timeValue){
-
+docRef.info.keywords = ["OffsetRun"];
     var offsetRes=docRef.resolution;
-    var snapshot=docRef.historyStates.getByName("File Info");
+    var snapshot=docRef.historyStates.getByName("Custom Measurement Scale");
+    
 
 if(offsetValue!=null){
   offsetValue=(((offsetValue/2)*100)*offsetRes)/2540;
@@ -71,22 +73,28 @@ if(offsetValue!=null){
 
 for (var reruns=0; reruns<rerunValue;reruns++){ // roda automaticamente n vezes
 
-
-
     for (var i = 0; i < docRef.channels.length; i++) {//aplica a magica
 
     //set random values for Horizontal and vertical
+    
     var randOffV = getRandomInt(-offsetValue,offsetValue),
     randOffH = getRandomInt(-offsetValue,offsetValue),
     unitType="pixels";
-
+          
     randOffH= randOffH+" "+unitType;
     randOffV=randOffV+" "+unitType;
 
-    refLayer = docRef.artLayers.getByName("Background");
-    theChannels = new Array(docRef.channels[i]); //select current channel
+    var upperName = docRef.channels[i].name.toUpperCase(), channelRef = docRef.channels[i];
+    
+    if(upperName.indexOf("DIE") != -1 || upperName.indexOf("TECH") != -1) 
+      {
+      channelRef.remove();
+    }
+    
+      refLayer = docRef.artLayers.getByName("Background");
+      theChannels = new Array(docRef.channels[i]); //select current channel    
     docRef.activeChannels=theChannels;
-
+        
     refLayer.applyOffset(randOffH,randOffV,OffsetUndefinedAreas.SETTOBACKGROUND); //filter current layer of current document using offset filter
 
     }
@@ -129,7 +137,7 @@ function ajustaEscala(){
 
   app.activeDocument.measurementScale.pixelLength = relacao;
   app.activeDocument.measurementScale.logicalLength = milimetro;
-  app.activeDocument.measurementScale.logicalUnits = "mm";
+  app.activeDocument.measurementScale.logicalUnits = " mm";
 
 }
 
