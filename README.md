@@ -1,5 +1,5 @@
 ***
-# PS_RegistrationErr_Preview
+# PS Registration Error Preview
 ***
 Copyright Johnny Kamigashima 2021
 
