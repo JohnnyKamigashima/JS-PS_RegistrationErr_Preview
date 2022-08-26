@@ -1,6 +1,7 @@
-
+***
 # PS_RegistrationErr_Preview
-# Copyright Johnny Kamigashima 2021
+***
+Copyright Johnny Kamigashima 2021
 
  Photoshop JSX script to preview possible printing registration errors on an image, this script will make use of Offset filter to unalign channels in order to make visible possible registration issues twithin the artwork.
 
